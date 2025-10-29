@@ -53,21 +53,25 @@ Every contribution to the code must be published under the [CC BY-SA 4.0](https:
 * [ ] Add ids by default on all Header with [`unique_identifier`](https://pandoc.org/lua-filters.html#pandoc.structure.unique_identifier)
 * [ ] Pandoc doesnt support multiline notes for Asciidoc, make an option to collapse them into single-line notes.
 * [ ] Add `start` and `end` operators that ignore everything before and after the first matches of these selectors.
+* [ ] Add depth to inline elements in `idml2docbook`. For example, `<phrase role="role1">Word 1, </phrase><phrase role="role2">Word 2 </phrase><phrase role="role1">Word 3.</phrase>` should collapse into `<phrase role="role1">Word 1 <phrase role="role2">Word 2 </phrase>Word 3.</phrase>`.
 
 
 ### Issues to investigate and publish on @jgm/pandoc
 
 * [ ] Linebreaks in headers isn't supported with the AsciiDoc writer
 * [ ] ID attributes are not supported in headers with the AsciiDoc writer
-* [ ] Brackets in asciidoc are broken
+* [ ] Brackets in asciidoc are broken.
 * [ ] Wrapped elements with same attributes collapse with several occurrences of the same attribute (see `roles-to-classes.lua`)
 * [ ] AsciiDoc writer does not support Blocks attributes.
+* [ ] AsciiDoc writer does not support `Superscript` elements.
+* [ ] Footnotes preceded by a pair of bounding characters (such as `_` for italic) are not doubled, which is [necessary](https://docs.asciidoctor.org/asciidoc/latest/text/italic/#italic-syntax) for correctly parsing those inline tags.
 
 ### idml2xml
 
 * [x] ~~Make it so calls to le-tex.de are not needed anymore and gain autonomy~~ Did I dream that?
 * [x] Support accentuated characters in class names
 * [ ] There is a bug regarding fonts' direct formatting handling. I think the following snippet is not taking into account the fact that the first `phrase` is in italics, because the font is badly handled.
+* [ ] `<Content> </Content>` IDML snippets should get converted into `<phrase> </phrase>` elements, but they just get deleted (see `aucomm`).
 
 ```
    <para role="NormalParagraphStyle">
