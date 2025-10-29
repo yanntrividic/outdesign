@@ -54,7 +54,8 @@ Every contribution to the code must be published under the [CC BY-SA 4.0](https:
 * [ ] Pandoc doesnt support multiline notes for Asciidoc, make an option to collapse them into single-line notes.
 * [ ] Add `start` and `end` operators that ignore everything before and after the first matches of these selectors.
 * [ ] Add depth to inline elements in `idml2docbook`. For example, `<phrase role="role1">Word 1, </phrase><phrase role="role2">Word 2 </phrase><phrase role="role1">Word 3.</phrase>` should collapse into `<phrase role="role1">Word 1 <phrase role="role2">Word 2 </phrase>Word 3.</phrase>`.
-
+* [ ] By default, MacOS runs an old version of `bash`, which doesn't work with `calabash`. In order to run `calabash` on MacOS, users need to get an updated `bash` version.
+* [ ] `sed` behaves differently on MacOS and on GNU. Which means that `install.sh:166` prompts an error `sed: 1: ".env": invalid command code .`. The most dirty fix would be to detect if the script is running on MacOS or Linux and differentiate the command.
 
 ### Issues to investigate and publish on @jgm/pandoc
 
