@@ -129,7 +129,7 @@ end
 -- It can be handy to keep empty elements. The idml2docbook
 -- module sends the data of empty elements to the AST by
 -- just filling it with a LineBreak. (Should it be a SoftBreak?)
-function operators.isContentOneLineBreak(el)
+function isContentOneLineBreak(el)
   div_wrapper_with_one_linebreak = pandoc.Div(pandoc.Para(pandoc.LineBreak()), pandoc.Attr("", el.classes, { wrapper = 1 }))
   return el == div_wrapper_with_one_linebreak
 end
@@ -140,7 +140,7 @@ end
 -- Global counter table for unique IDs
 local id_counters = {}
 
-function operators.applyId(el)
+function applyId(el)
   local id, classes, attrs = getAttr(el.attr)
   if id ~= "" then return el end
 
@@ -188,7 +188,7 @@ end
 --   - operation_classes == false → remove all classes
 --   - operation_classes == ""    → remove selector_classes only
 --   - operation_classes is string → replace selector_classes with new ones
-function operators.applyClasses(el, selector_classes, operation_classes)
+function applyClasses(el, selector_classes, operation_classes)
   -- Handle case where o.classes == false → remove all classes
   if operation_classes == false then
     el.classes = {}
@@ -299,7 +299,7 @@ local function applyAttrsInline(el, keyvals)
 end
 
 -- Dispatcher
-function operators.applyAttrs(el, keyvals)
+function applyAttrs(el, keyvals)
   if blockTypes[el.t] then
     return applyAttrsBlock(el, keyvals)
   elseif inlineTypes[el.t] then
@@ -441,7 +441,7 @@ end
 -- This function keeps track of classes, attributes and ids. When necessary,
 -- a wrapper Div or Span is created around the new element type to keep all
 -- the data after conversion.
-function operators.applyType(el, newtype)
+function applyType(el, newtype)
   if utils.isWrapper(el) then
     local wrapper_id, wrapper_classes, wrapper_attributes = getAttr(el)
     local wrapper_attr = pandoc.Attr(wrapper_id, wrapper_classes, wrapper_attributes)
@@ -477,7 +477,7 @@ function operators.applyType(el, newtype)
   end
 end
 
-function operators.applyLevel(el, level)
+function applyLevel(el, level)
   if el.t == "Header" then
     -- Preserve attributes and content
     return pandoc.Header(level, el.content, el.attr)
@@ -491,7 +491,7 @@ end
 -- Function that simplifies an element.
 -- If the element is a wrapper, it unwraps its content.
 -- If it is not a wrapper, it only deleted its Attr.
-function operators.simplify(el)
+function simplify(el)
 
   id, classes, attrs = getAttr(el.attr)
   
@@ -552,7 +552,7 @@ end
 -- 2) With a Div that is a wrapper, that means replacing the Div and its
 --    content element with a Para element without Attr.
 -- 3) With any other Block, that means replacing the tag with a Para.
-function operators.unwrap(el)
+function unwrap(el)
   if inlineTypes[el.t] then -- We check if we handle this element
     -- Code is an exception as it contains text and not content
     if el.t == "Code" then
@@ -595,7 +595,7 @@ end
 -- The wrapper argument is actually a string that can hold classes,
 -- Note: These wrappers are explicit, not explicit such as elements
 -- with wrapper=1 atributes.
-function operators.wrap(el, wrapper)
+function wrap(el, wrapper)
   local tag, _, classes = utils.parseSelector(wrapper)
   if blockTypes[el.t] then
     -- Wrap Blocks in a Div
@@ -626,13 +626,13 @@ function operators.wrap(el, wrapper)
 end
 
 -- Cleans the final returned object.
-function operators.clean(el)
+function clean(el)
   return removeEmptyWrapper(el)
 end
 
 -- Inserts a LineBreak element before the element given
 -- as argument.
-function operators.insertLineBreakBefore(el)
+function insertLineBreakBefore(el)
   -- We are in the context where this is an unwrapped Div that
   -- contains only one element. It won't work for several elements.
   if el.t == nil and type(el) ~= "string" then
@@ -879,21 +879,21 @@ function operators.applyOperation(el, entry, matched_sel, operation)
     return {}
   end
   if not o.empty then
-    if operators.isContentOneLineBreak(el) then
+    if isContentOneLineBreak(el) then
       return {}
     end
   end
   if o.simplify then
-    el = operators.simplify(el)
+    el = simplify(el)
   end
   if o.classes ~= nil then
-    el = operators.applyClasses(el, matched_sel._classes, o.classes)
+    el = applyClasses(el, matched_sel._classes, o.classes)
   end
   if o.attrs then
-    operators.applyAttrs(el, o.attrs)
+    applyAttrs(el, o.attrs)
   end
   if o.type then
-    local ok, result = pcall(operators.applyType, el, o.type)
+    local ok, result = pcall(applyType, el, o.type)
     if ok then
       el = result
     else
@@ -901,10 +901,10 @@ function operators.applyOperation(el, entry, matched_sel, operation)
     end
   end
   if o.id then
-     el = operators.applyId(el)
+     el = applyId(el)
   end
   if o.level then
-    local ok, result = pcall(operators.applyLevel, el, o.level)
+    local ok, result = pcall(applyLevel, el, o.level)
     if ok then
       el = result
     else
@@ -912,14 +912,14 @@ function operators.applyOperation(el, entry, matched_sel, operation)
     end
   end
   if o.unwrap then
-    el = operators.unwrap(el)
+    el = unwrap(el)
   end
   if o.wrap then
-    el = operators.wrap(el, o.wrap)
+    el = wrap(el, o.wrap)
   end
-  el = operators.clean(el)
+  el = clean(el)
   if o.br then
-    el = operators.insertLineBreakBefore(el)
+    el = insertLineBreakBefore(el)
   end
   return el
 end
