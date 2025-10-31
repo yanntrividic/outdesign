@@ -152,7 +152,7 @@ end
 function utils.printTable(tbl, indent)
     indent = indent or 0
     for k, v in pairs(tbl) do
-        local formatting = string.rep("  ", indent) .. k .. ": "
+        local formatting = string.rep("  ", indent) .. tostring(k) .. ": "
         if type(v) == "table" then
             print(formatting)
             utils.printTable(v, indent + 1)
