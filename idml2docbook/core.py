@@ -143,8 +143,12 @@ def process_endnotes(soup):
         # Deep copy the content
         note_copy = copy.copy(endnote_para)
 
-        # Clean it
-        for el in note_copy.find_all(["anchor", "phrase"]):
+        # remove the anchor that only marks the note location
+        for el in note_copy.find_all("anchor", attrs={"role": "hub:endnote"}):
+            el.decompose()
+        
+        # remove only the EndnoteMarker link
+        for el in note_copy.find_all("link", attrs={"remap": "EndnoteMarker"}):
             el.decompose()
 
         note_text_content = [child for child in note_copy.contents if not (isinstance(child, NavigableString) and not child.strip())]
