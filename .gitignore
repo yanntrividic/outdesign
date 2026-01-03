@@ -18,6 +18,7 @@ output
 articles
 *.old
 workshop
+maps
 
 # docs
 !docs/build
