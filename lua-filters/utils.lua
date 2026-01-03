@@ -227,7 +227,8 @@ function utils.parseSelector(sel)
   -- Check for invalid punctuation (anything not . or # or valid chars)
   local cleaned = remainder:gsub("%.[%w_-]+", "")
   cleaned = cleaned:gsub("#[%w_-]+", "")
-  cleaned = cleaned:gsub("[%w_]+", "")
+  -- we also accept ":" as it can appear in hub XML files...
+  cleaned = cleaned:gsub("[%w_:]+", "")
   if cleaned:match("[^%s]") then
     error("Invalid selector syntax: " .. sel)
   end
