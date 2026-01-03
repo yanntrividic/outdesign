@@ -7,7 +7,6 @@ import logging
 
 from idml2hubxml import *
 from utils import *
-from slugs import *
 from map import *
 
 NODES_TO_REMOVE = [

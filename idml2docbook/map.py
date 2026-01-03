@@ -3,7 +3,7 @@ import sys
 import json
 import logging
 import os
-from slugs import custom_slugify
+from utils import custom_slugify
 from bs4 import BeautifulSoup
 from natsort import natsorted
 import natsort as ns
@@ -413,7 +413,7 @@ def build_dict_from_map_array(map):
 
 if __name__ == "__main__":
     if len(sys.argv) < 4:
-        print("Usage: python script.py input.xml map.json [--to-ods] [--to-css] [--to-json-template]")
+        print("Usage: python map.py input.xml map.json [--to-ods] [--to-css] [--to-json-template]")
         sys.exit(1)
 
     to_ods = "--to-ods" in sys.argv
