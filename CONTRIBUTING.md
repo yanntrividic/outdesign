@@ -61,11 +61,12 @@ Every contribution to the code must be published under the [CC BY-SA 4.0](https:
 
 * [ ] Linebreaks in headers isn't supported with the AsciiDoc writer
 * [ ] ID attributes are not supported in headers with the AsciiDoc writer
-* [ ] Brackets in asciidoc are broken.
-* [ ] Wrapped elements with same attributes collapse with several occurrences of the same attribute (see `roles-to-classes.lua`)
+* [ ] Brackets in asciidoc are broken. **Update:** Might be fixed in latest releases.
+* [x] Wrapped elements with same attributes collapse with several occurrences of the same attribute (see `roles-to-classes.lua`). **Update:** This happens in extremely singular cases.
 * [ ] AsciiDoc writer does not support Blocks attributes.
-* [ ] AsciiDoc writer does not support `Superscript` elements.
-* [ ] Footnotes preceded by a pair of bounding characters (such as `_` for italic) are not doubled, which is [necessary](https://docs.asciidoctor.org/asciidoc/latest/text/italic/#italic-syntax) for correctly parsing those inline tags.
+* [ ] AsciiDoc writer does not support `Superscript` elements. **Update:** I can't remember why I wrote that...
+* [x] Footnotes preceded by a pair of bounding characters (such as `_` for italic) are not doubled, which is [necessary](https://docs.asciidoctor.org/asciidoc/latest/text/italic/#italic-syntax) for correctly parsing those inline tags. It could be an easy PR to double all those signs. **Update:** [issue published](https://github.com/jgm/pandoc/issues/11362).
+
 
 ### idml2xml
 
