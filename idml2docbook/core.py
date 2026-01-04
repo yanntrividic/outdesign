@@ -232,6 +232,8 @@ def remove_orthotypography(soup):
     for space in special_spaces:
         s = s.replace(space, " ")
 
+    s = s.replace(r"\s\s+", " ") # remove double spaces
+
     return BeautifulSoup(s, "xml")
 
 def linebreaks_cleanup(soup):
@@ -254,12 +256,12 @@ def linebreaks_cleanup(soup):
     s = str(soup)
 
     pattern_leading_char = re.compile(
-        r'\n((<phrase[^>]*>)?([\.,;:!’\?\)\]…]).*?(<\/phrase>)?)'
+        r'\n((<phrase[^>]*>)?([\.\-,;:!’\?\)\]…]).*?(<\/phrase>)?)'
     )
     s = pattern_leading_char.sub(r'\1', s)
 
     pattern_trailing_apostrophe = re.compile(
-        r'((<phrase[^>]*>)?.*?([’\(\[])(<\/phrase>)?)\n'
+        r'((<phrase[^>]*>)?.*?([’\-\(\[])(<\/phrase>)?)\n'
     )
     s = pattern_trailing_apostrophe.sub(r'\1', s)
 
@@ -319,12 +321,12 @@ def add_french_orthotypography(soup, thin_spaces):
 
     s = str(soup)
 
-    s = re.sub(r"\s([!\?;€\$%])", u"\u202f" + r'\1', s) # thin spaces
-    s = re.sub(r"\s\:", (u"\u202f" if thin_spaces else u"\u00a0") + r':', s) # nbsp, doesn't seem to work...
-    s = re.sub(r"(\d)\s(\d\d\d)", r'\1' + u"\u202f" + r'\2', s) # numbers
-    s = re.sub(r"«\s?", r'«' + u"\u202f", s) # quotes
-    s = re.sub(r"\s?»", u"\u202f" + r'»', s) # quotes
-    s = re.sub(r"([^0-9])°\s?", r'\1°' + u"\u202f", s) # degrees
+    s = re.sub(r"\s+([!\?;€\$%])", u"\u202f" + r'\1', s) # thin spaces
+    s = re.sub(r"\s+\:", (u"\u202f" if thin_spaces else u"\u00a0") + r':', s) # nbsp, doesn't seem to work...
+    s = re.sub(r"(\d)\s+(\d\d\d)", r'\1' + u"\u202f" + r'\2', s) # numbers
+    s = re.sub(r"«\s*", r'«' + u"\u202f", s) # quotes
+    s = re.sub(r"\s*»", u"\u202f" + r'»', s) # quotes
+    s = re.sub(r"([^0-9])°\s*", r'\1°' + u"\u202f", s) # degrees
     s = re.sub(r"\.\.\.", r'…', s) # suspension marks
 
     return BeautifulSoup(s, "xml")
@@ -356,7 +358,6 @@ def hubxml2docbook(file, **options):
     # remove_unnecessary_layer(soup)
     remove_unnecessary_attributes(soup)
     remove_ns_attributes(soup)
-    unwrap_phrase_without_attributes(soup)
 
     process_images(soup,
         options["raster"],
@@ -379,7 +380,7 @@ def hubxml2docbook(file, **options):
         # TODO: this does not prettify anymore, it just
         # it just tries to remove the correct linebreaks,
         # which gives better results in some cases.
-        soup = remove_hyphens(soup, "xml")
+        soup = linebreaks_cleanup(soup)
 
         # Old code:
         # docbook = soup.prettify()
@@ -388,7 +389,10 @@ def hubxml2docbook(file, **options):
         # str(soup) does it less, but to ensure we don't have
         # this problem, we just remove linebreaks entirely.
 
-    soup = linebreaks_cleanup(soup)
+    unwrap_phrase_without_attributes(soup)
+
+    # In what cases was this line useful already?
+    # soup = remove_hyphens(soup, "xml")
 
     if options["typography"]:
         soup = remove_orthotypography(soup)
