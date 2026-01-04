@@ -56,15 +56,16 @@ Every contribution to the code must be published under the [CC BY-SA 4.0](https:
 * [ ] Add depth to inline elements in `idml2docbook`. For example, `<phrase role="role1">Word 1, </phrase><phrase role="role2">Word 2 </phrase><phrase role="role1">Word 3.</phrase>` should collapse into `<phrase role="role1">Word 1 <phrase role="role2">Word 2 </phrase>Word 3.</phrase>`.
 * [ ] By default, MacOS runs an old version of `bash`, which doesn't work with `calabash`. In order to run `calabash` on MacOS, users need to get an updated `bash` version.
 * [ ] `sed` behaves differently on MacOS and on GNU. Which means that `install.sh:166` prompts an error `sed: 1: ".env": invalid command code .`. The most dirty fix would be to detect if the script is running on MacOS or Linux and differentiate the command.
+* [ ] Add a limitation to the documentation: does not react well when several character styles are used in the same word.
 
 ### Issues to investigate and publish on @jgm/pandoc
 
-* [ ] Linebreaks in headers isn't supported with the AsciiDoc writer
-* [ ] ID attributes are not supported in headers with the AsciiDoc writer
+* [ ] Linebreaks in headers isn't supported with the AsciiDoc writer.
+* [x] ID attributes are not supported in headers with the AsciiDoc writer. **Update:** [Issue published.](https://github.com/jgm/pandoc/issues/11363) 
 * [ ] Brackets in asciidoc are broken. **Update:** Might be fixed in latest releases.
 * [x] Wrapped elements with same attributes collapse with several occurrences of the same attribute (see `roles-to-classes.lua`). **Update:** This happens in extremely singular cases.
-* [ ] AsciiDoc writer does not support Blocks attributes.
-* [ ] AsciiDoc writer does not support `Superscript` elements. **Update:** I can't remember why I wrote that...
+* [x] AsciiDoc writer does not support Blocks attributes. **Update:** [Issue published.](https://github.com/jgm/pandoc/issues/11363)
+* [x] AsciiDoc writer does not support `SmallCaps` elements. **Update:** [Issue published and closed.](https://github.com/jgm/pandoc/issues/11374)
 * [x] Footnotes preceded by a pair of bounding characters (such as `_` for italic) are not doubled, which is [necessary](https://docs.asciidoctor.org/asciidoc/latest/text/italic/#italic-syntax) for correctly parsing those inline tags. It could be an easy PR to double all those signs. **Update:** [issue published](https://github.com/jgm/pandoc/issues/11362).
 
 
@@ -73,7 +74,7 @@ Every contribution to the code must be published under the [CC BY-SA 4.0](https:
 * [x] ~~Make it so calls to le-tex.de are not needed anymore and gain autonomy~~ Did I dream that?
 * [x] Support accentuated characters in class names
 * [ ] There is a bug regarding fonts' direct formatting handling. I think the following snippet is not taking into account the fact that the first `phrase` is in italics, because the font is badly handled.
-* [ ] `<Content> </Content>` IDML snippets should get converted into `<phrase> </phrase>` elements, but they just get deleted (see `aucomm`).
+* [ ] `<Content> </Content>` IDML snippets should get converted into `<phrase> </phrase>` elements, but they just get deleted (see `aucomm`). **Update:** Partly handled for `vt` in 98fdcd9fac1e3973c0b20b698d1960607d1527cf.
 
 ```
    <para role="NormalParagraphStyle">

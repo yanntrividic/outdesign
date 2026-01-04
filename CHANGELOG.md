@@ -2,6 +2,7 @@
 
 ## idml-pandoc-reader 0.5.0 (WIP)
 
+* Better implementation for the pretty formatter (`-p` flag), can be useful with some InDesign documents.
 * Support for multiple selectors and `id`-based selectors.
 * Support for the `id` operator.
 * Support for the `join` operator.
