@@ -232,7 +232,7 @@ def remove_orthotypography(soup):
     for space in special_spaces:
         s = s.replace(space, " ")
 
-    s = s.replace(r"\s\s+", " ") # remove double spaces
+    s = s.replace(r"\s+", " ") # remove double spaces
 
     return BeautifulSoup(s, "xml")
 
@@ -256,12 +256,12 @@ def linebreaks_cleanup(soup):
     s = str(soup)
 
     pattern_leading_char = re.compile(
-        r'\n((<phrase[^>]*>)?([\.\-,;:!’\?\)\]…]).*?(<\/phrase>)?)'
+        r'\s((<phrase[^>]*>)?([\.,;:!’\?\)\]…]).*?(<\/phrase>)?)'
     )
     s = pattern_leading_char.sub(r'\1', s)
 
     pattern_trailing_apostrophe = re.compile(
-        r'((<phrase[^>]*>)?.*?([’\-\(\[])(<\/phrase>)?)\n'
+        r'((<phrase[^>]*>)?.*?([’\(\[])(<\/phrase>)?)\s'
     )
     s = pattern_trailing_apostrophe.sub(r'\1', s)
 
@@ -273,6 +273,29 @@ def linebreaks_cleanup(soup):
     # s = pattern_footnote.sub(r'\1', s)    
 
     return BeautifulSoup(s, "xml")
+
+def replace_linebreaks_after_css_attributes(soup):
+    logging.info("Replacing linebreaks after <phrase> with css:direction or css:transform with a space...")
+
+    for phrase in soup.find_all("phrase"):
+        has_target_attr = any(
+            attr.split(":")[-1] in ["direction", "transform"]
+            for attr in phrase.attrs
+        )
+
+        if not has_target_attr:
+            continue
+
+        next_sib = phrase.next_sibling
+
+        while next_sib and isinstance(next_sib, str) and next_sib.strip() == "":
+            # Replace newline/whitespace with EXACTLY one space
+            next_sib.replace_with(" ")
+            # move forward from the replaced node
+            next_sib = next_sib.next_sibling
+
+    return soup
+
 
 def move_space_outside_of_phrase(soup, space_chars=" \u00a0\u202f"):
     for phrase in list(soup.find_all("phrase")):
@@ -319,17 +342,20 @@ def add_french_orthotypography(soup, thin_spaces):
     """
     logging.info("Adding new french orthotypography...")
 
-    s = str(soup)
+    for node in soup.find_all(string=True):
+        if not isinstance(node, NavigableString):
+            continue
+        text = str(node)
+        text = re.sub(r"\s*([!\?;€\$%])", u"\u202f" + r'\1', text) # thin spaces
+        text = re.sub(r"(?<!http)(?<!https)\s*\:", (u"\u202f" if thin_spaces else u"\u00a0") + r':', text) # nbsp, doesn't seem to work...
+        text = re.sub(r"(\d)\s(\d\d\d)", r'\1' + u"\u202f" + r'\2', text) # numbers
+        text = re.sub(r"«\s", r'«' + u"\u202f", text) # quotes
+        text = re.sub(r"\s»", u"\u202f" + r'»', text) # quotes
+        text = re.sub(r"([^0-9])°\s?", r'\1°' + u"\u202f", text) # degrees
+        text = re.sub(r"\.\.\.", r'…', text) # suspension marks
+        node.replace_with(text)
 
-    s = re.sub(r"\s+([!\?;€\$%])", u"\u202f" + r'\1', s) # thin spaces
-    s = re.sub(r"\s+\:", (u"\u202f" if thin_spaces else u"\u00a0") + r':', s) # nbsp, doesn't seem to work...
-    s = re.sub(r"(\d)\s+(\d\d\d)", r'\1' + u"\u202f" + r'\2', s) # numbers
-    s = re.sub(r"«\s*", r'«' + u"\u202f", s) # quotes
-    s = re.sub(r"\s*»", u"\u202f" + r'»', s) # quotes
-    s = re.sub(r"([^0-9])°\s*", r'\1°' + u"\u202f", s) # degrees
-    s = re.sub(r"\.\.\.", r'…', s) # suspension marks
-
-    return BeautifulSoup(s, "xml")
+    return soup
 
 def hubxml2docbook(file, **options):
     logging.info("hubxml2docbook starting...")
@@ -351,6 +377,8 @@ def hubxml2docbook(file, **options):
     for tag in soup.find_all(string=lambda text: isinstance(text, str) and text.strip().startswith("xml-model")):
         tag.extract()
     # <article version="5.0" xml:lang="fr-FR" xmlns="http://docbook.org/ns/docbook">
+
+    replace_linebreaks_after_css_attributes(soup)
 
     if not options["ignore_overrides"]: soup, _, _ = turn_overrides_into_roles(str(soup))
 
