@@ -8,6 +8,7 @@ import logging
 from idml2hubxml import *
 from utils import *
 from map import *
+from images import RASTER_EXTS, VECTOR_EXTS
 
 NODES_TO_REMOVE = [
     "info",      # at some point it would be good to get those metadata and convert it.
@@ -185,6 +186,10 @@ def remove_ns_attributes(soup):
         for attr in to_remove:
             del tag[attr]
 
+def unwrap_phrase_without_attributes(soup):
+    for tag in soup.find_all("phrase"):
+        if (tag.attrs == {}): tag.unwrap();
+
 def remove_linebreaks(soup):
     """When working with ragged paragraphs, some <br> tags might be added
     It can be handy to replace them with spaces to have more reflowable content."""
@@ -226,6 +231,44 @@ def remove_orthotypography(soup):
 
     for space in special_spaces:
         s = s.replace(space, " ")
+
+    return BeautifulSoup(s, "xml")
+
+def linebreaks_cleanup(soup):
+    """idml2hubxml-frontend does not handle perfectly the way inlines
+    are separated in some cases. Basically, structures such as this one
+    add an unsollicitated space between "space" and ".":
+    ...<phrase role="italique">safer space</phrase>
+    <phrase>. Les...
+    This is also the case with:
+    ...<phrase role="appelDeNote">3</phrase>
+    <phrase>;</phrase>...
+    Linebreaks thus need to be removed before ".,;:!?"
+    and before and after ","
+    It is necessary when the line starts with a <phrase> element, such as:
+    <phrase role="hey">; blabla...</phrase>
+    and when it doesn't, such as:
+    ; blabla...
+    """
+    logging.info("Cleaning up extra linebreaks...")
+    s = str(soup)
+
+    pattern_leading_char = re.compile(
+        r'\n((<phrase[^>]*>)?([\.,;:!’\?\)\]…]).*?(<\/phrase>)?)'
+    )
+    s = pattern_leading_char.sub(r'\1', s)
+
+    pattern_trailing_apostrophe = re.compile(
+        r'((<phrase[^>]*>)?.*?([’\(\[])(<\/phrase>)?)\n'
+    )
+    s = pattern_trailing_apostrophe.sub(r'\1', s)
+
+    # Now we need to take care about footnotes
+    # Dunno why it does not work...
+    # pattern_footnote = re.compile(
+    #     r'\n(<footnote[^>]*>.*?<\/footnote>)\n'
+    # )
+    # s = pattern_footnote.sub(r'\1', s)    
 
     return BeautifulSoup(s, "xml")
 
@@ -313,6 +356,7 @@ def hubxml2docbook(file, **options):
     # remove_unnecessary_layer(soup)
     remove_unnecessary_attributes(soup)
     remove_ns_attributes(soup)
+    unwrap_phrase_without_attributes(soup)
 
     process_images(soup,
         options["raster"],
@@ -329,7 +373,22 @@ def hubxml2docbook(file, **options):
 
     fill_empty_elements_with_br(soup)
 
-    soup = remove_hyphens(soup, "xml")
+
+    if options["prettify"]:
+        logging.warning("Prettifying can result in errors depending on whatcha wanna do afterwards!")
+        # TODO: this does not prettify anymore, it just
+        # it just tries to remove the correct linebreaks,
+        # which gives better results in some cases.
+        soup = remove_hyphens(soup, "xml")
+
+        # Old code:
+        # docbook = soup.prettify()
+        # prettify adds `\n` around inline elements,
+        # which is parsed as spaces in Pandoc.
+        # str(soup) does it less, but to ensure we don't have
+        # this problem, we just remove linebreaks entirely.
+
+    soup = linebreaks_cleanup(soup)
 
     if options["typography"]:
         soup = remove_orthotypography(soup)
@@ -337,12 +396,7 @@ def hubxml2docbook(file, **options):
         soup = move_space_outside_of_phrase(soup)
 
     if options["prettify"]:
-        logging.warning("Prettifying can result in errors depending on whatcha wanna do afterwards!")
-        docbook = soup.prettify()
-        # prettify adds `\n` around inline elements,
-        # which is parsed as spaces in Pandoc.
-        # str(soup) does it less, but to ensure we don't have
-        # this problem, we just remove linebreaks entirely.
+        docbook = str(soup)
     else:
         docbook = str(soup).replace("\n", "")
 
