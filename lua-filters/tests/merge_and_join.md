@@ -2,7 +2,9 @@ This file contains tests particularly targeted on the `merge` and the `join` ope
 
 <div class="to-merge" wrapper=1>
 
-Paragraph to merge #1.
+Paragraph to merge #1.1.
+
+Paragraph to merge #1.2.
 
 </div>
 

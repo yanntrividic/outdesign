@@ -32,15 +32,29 @@ run_test() {
 }
 
 # TEST 1: Synthetic test to cover edge cases and such.
-run_test "Synthetic style mapping" \
+run_test "Synthetic style mapping, main test file" \
     "time diff -s --color=auto \
         ${SCRIPT_DIR}/test.output \
         <(pandoc -f markdown ${SCRIPT_DIR}/test.md -t markdown \
         --lua-filter=${PARENT_DIR}/map.lua -M map=${SCRIPT_DIR}/test.json --verbose)"
 
-# TEST 2: Déborder Bolloré
+# TEST 2: Synthetic test to cover edge cases and such.
+run_test "Synthetic style mapping, merge and join operators" \
+    "time diff -s --color=auto \
+        ${SCRIPT_DIR}/merge_and_join.output \
+        <(pandoc -f markdown ${SCRIPT_DIR}/merge_and_join.md -t markdown_phpextra \
+        --lua-filter=${PARENT_DIR}/merge.lua --verbose --wrap=none)"
+
+# TEST 2B: Synthetic test to cover edge cases and such.
+run_test "Synthetic style mapping, merge and join operators" \
+    "time diff -s --color=auto \
+        ${SCRIPT_DIR}/merge_and_join.output \
+        <(pandoc -f markdown ${SCRIPT_DIR}/merge_and_join.md -t markdown_phpextra \
+        --lua-filter=${PARENT_DIR}/merge_top_level_elements.lua --verbose --wrap=none)"
+
+# TEST 3: Déborder Bolloré
 # bollo.dbk was obtained with the following command:
-# python -m idml2docbook -tlg -o lua-filters/test/bollo2.dbk -x idml2hubxml/Deborder-Bollore_140_205_250521_modifie.xml \ 
+# python -m idml2docbook -tlg -o lua-filters/tests/bollo.dbk -x idml2hubxml/Deborder-Bollore_140_205_250521_modifie.xml \ 
 # --raster "jpg" --vector "svg" -f "images"
 run_test "Déborder Bolloré (DocBook → Markdown)" \
     "time diff -s --color=auto \
