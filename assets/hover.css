@@ -1,0 +1,41 @@
+body *:not(article, .grid) {
+    outline: 0.07rem dashed ;
+    outline-offset: -0.07rem;
+    outline-color: rgba(0, 0, 0, 0.1);
+    background-color: rgba(250, 235, 215,0.2);
+}
+span, i, b, strong, em, sup, sub {
+    outline-color: rgba(0, 0, 0, 0.5) !important;
+    background-color: rgba(252, 222, 183, 0.9) !important;
+}
+body *:not(article, .grid):hover {
+    outline-width: 0.13rem;
+    outline-color: grey;
+}
+body *:not(article, .grid) {
+    position: relative; /* anchor for the absolute ::before */
+}
+body *:not(article, .grid)::before {
+    content: var(--element);
+    position: absolute; /* take it out of the flow */
+    top: -1.53rem;
+    left: 0;
+    font-size: .7rem;
+    font-weight: 400;
+    font-style: normal;
+    padding: .25em .5em;
+    background-color: gray;
+    color: white;
+    font-family: sans-serif;
+    opacity: 0;
+    pointer-events: none;
+    border-top-left-radius: 0.2rem 0.2rem;
+    border-top-right-radius: 0.2rem 0.2rem;
+    text-indent: 0;
+}
+
+body *:not(article, .grid):hover::before {
+    opacity: 1;
+    outline-width: 0.2em;
+}
+
