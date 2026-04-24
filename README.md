@@ -1,9 +1,15 @@
 # OutDesign
 
-[![Design](https://contribute.design/api/shield/yanntrividic/idml-pandoc-reader)](https://contribute.design/yanntrividic/idml-pandoc-reader)
-![Release](https://gitlab.com/deborderbollore/idml-pandoc-reader/-/badges/release.svg)
+[![Design](https://contribute.design/api/shield/yanntrividic/outdesign)](https://contribute.design/yanntrividic/outdesign)
+![Release](https://gitlab.com/deborderbollore/outdesign/-/badges/release.svg)
+
+> [!IMPORTANT]  
+> **This repository is not active anymore, as the development of OutDesign continues on [a dedicated GitLab group](https://gitlab.com/outdesign-app).** There is no active development on this codebase. This repository remains available for archival purposes, but if you are interested in the project, please go have a look to the code over on GitLab.
 
 [English version [below](#en)!]
+
+> [!IMPORTANT]  
+> **Ce dépôt n'est plus actif, le développement de OutDesign continue sur [un groupe GitLab dédié](https://gitlab.com/outdesign-app).** Ce dépôt reste disponible pour des questions d'archivage, mais si vous êtes intéressé·e par le projet, alors rendez-vous sur GitLab.
 
 Ce dépôt contient un programme en ligne de commande automatisant la lecture de fichiers IDML (InDesign Markup Language) pour [Pandoc](https://pandoc.org). Pandoc est un convertisseur universel pouvant convertir énormément de formats de fichiers d'entrée vers énormément de formats de fichiers de sortie, dont DOCX, ODT, HTML, Markdown, AsciiDoc, [etc.](https://pandoc.org/diagram.svgz) **Seule la structure du document est convertie, la mise en forme est totalement ignorée.**
 
@@ -15,11 +21,11 @@ La documentation de ce dépôt (`docs`) est déployée en ligne sur [outdesign.d
 
 ## Contribuer
 
-Pour contribuer au développement de ce convertisseur, se référer au [guide de le·a contributeurice](https://gitlab.com/deborderbollore/idml-pandoc-reader/-/blob/main/CONTRIBUTING.md). Toute aide est la bienvenue !
+Pour contribuer au développement de ce convertisseur, se référer au [guide de le·a contributeurice](https://gitlab.com/deborderbollore/outdesign/-/blob/main/CONTRIBUTING.md). Toute aide est la bienvenue !
 
 ## Licence
 
-<a href="https://gitlab.com/deborderbollore/idml-pandoc-reader">IDML Pandoc Reader</a> (2025) par <a href="https://yanntrividic.fr">Yann Trividic</a> est distribué sous licence <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>.
+<a href="https://gitlab.com/deborderbollore/outdesign">IDML Pandoc Reader</a> (2025) par <a href="https://yanntrividic.fr">Yann Trividic</a> est distribué sous licence <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>.
 
 # <a name="en"></a>OutDesign (in english!)
 
@@ -34,8 +40,8 @@ The documentation for this repository (`docs`) is available online at [outdesign
 
 ## Contributing
 
-To contribute to the development of this converter, refer to the [Contributor Guide](https://gitlab.com/deborderbollore/idml-pandoc-reader/-/blob/main/CONTRIBUTING.md). All help is welcome!
+To contribute to the development of this converter, refer to the [Contributor Guide](https://gitlab.com/deborderbollore/outdesign/-/blob/main/CONTRIBUTING.md). All help is welcome!
 
 ## License
 
-<a href="https://gitlab.com/deborderbollore/idml-pandoc-reader">IDML Pandoc Reader</a> (2025) by <a href="https://yanntrividic.fr">Yann Trividic</a> is licensed under the <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a> license.
+<a href="https://gitlab.com/deborderbollore/outdesign">IDML Pandoc Reader</a> (2025) by <a href="https://yanntrividic.fr">Yann Trividic</a> is licensed under the <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a> license.
