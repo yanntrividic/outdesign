@@ -4,12 +4,12 @@
 ![Release](https://gitlab.com/deborderbollore/outdesign/-/badges/release.svg)
 
 > [!IMPORTANT]  
-> **This repository is not active anymore, as the development of OutDesign continues on [a dedicated GitLab group](https://gitlab.com/outdesign-app).** There is no active development on this codebase. This repository remains available for archival purposes, but if you are interested in the project, please go have a look to the code over on GitLab.
+> **This repository is not active anymore, as the development of OutDesign continues in [a dedicated Codeberg organisation](https://codeberg.org/outdesign).** There is no active development on this codebase. This repository remains available for archival purposes, but if you are interested in the project, please go have a look to the code over on GitLab.
 
 [English version [below](#en)!]
 
 > [!IMPORTANT]  
-> **Ce dépôt n'est plus actif, le développement de OutDesign continue sur [un groupe GitLab dédié](https://gitlab.com/outdesign-app).** Ce dépôt reste disponible pour des questions d'archivage, mais si vous êtes intéressé·e par le projet, alors rendez-vous sur GitLab.
+> **Ce dépôt n'est plus actif, le développement de OutDesign continue sur [une organisation Codeberg dédiée]([https://gitlab.com/outdesign-app](https://codeberg.org/outdesign)).** Ce dépôt reste disponible pour des questions d'archivage, mais si vous êtes intéressé·e par le projet, alors rendez-vous sur GitLab.
 
 Ce dépôt contient un programme en ligne de commande automatisant la lecture de fichiers IDML (InDesign Markup Language) pour [Pandoc](https://pandoc.org). Pandoc est un convertisseur universel pouvant convertir énormément de formats de fichiers d'entrée vers énormément de formats de fichiers de sortie, dont DOCX, ODT, HTML, Markdown, AsciiDoc, [etc.](https://pandoc.org/diagram.svgz) **Seule la structure du document est convertie, la mise en forme est totalement ignorée.**
 
